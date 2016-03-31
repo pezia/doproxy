@@ -1,0 +1,5 @@
+upstream sailing_app {
+  server app2:9001  fail_timeout=10s;
+  <% @droplets.each_with_index do |droplet, index| %>
+  server <%= droplet.private_ip %>:9001 fail_timeout=10s;<% end %>
+}

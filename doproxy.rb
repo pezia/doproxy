@@ -75,8 +75,8 @@ class DOProxy
       backend_inventory.close
       @backend_count += 1
       @droplets.push(created) # add droplet to array so it gets included in haproxy.cfg
-      reload_haproxy
-      puts "Success: #{droplet_id} created and added to backend."
+      generate_haproxy_cfg
+      puts "Success: #{droplet_id} created and added to backend config. Wait about 5 minutes and run '#{$0} reload'"
     else
       puts "Some error has occurred on droplet create (status was not 'new')"
     end
@@ -118,7 +118,7 @@ class DOProxy
   def reload_haproxy
     generate_haproxy_cfg
     FileUtils.cp(@haproxy_cfg_file, "#{@haproxy_cfg_path}/#{@haproxy_cfg_file}")
-    `service haproxy reload`
+    `service nginx reload`
   end
 
 
@@ -129,8 +129,8 @@ def print_usage
   puts "#{$0} print                   # Print backend droplets in inventory file"
   puts "#{$0} create                  # Create a new backend droplet and reload"
   puts "#{$0} delete <LINE_NUMBER>    # Delete a droplet and reload"
-  puts "#{$0} reload                  # Generate HAProxy config and reload HAProxy"
-  puts "#{$0} generate                # Generate HAProxy config based on inventory"
+  puts "#{$0} reload                  # Generate Backend config and reload Nginx"
+  puts "#{$0} generate                # Generate Backend config based on inventory"
 end
 
 
